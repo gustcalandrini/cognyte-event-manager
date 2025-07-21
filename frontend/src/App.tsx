@@ -1,10 +1,7 @@
-import React from 'react';
-import { Button } from 'antd';
+import AppRoutes from './shared/routes/routes';
 
 const App = () => (
-  <div className="App">
-    <Button type="primary">Button</Button>
-  </div>
+    <AppRoutes />
 );
 
 export default App;
