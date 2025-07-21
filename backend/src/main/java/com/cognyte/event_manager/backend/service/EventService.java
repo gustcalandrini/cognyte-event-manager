@@ -1,12 +1,17 @@
 package com.cognyte.event_manager.backend.service;
 
 import com.cognyte.event_manager.backend.domain.Event;
+import com.cognyte.event_manager.backend.domain.enumeration.EventStatus;
 import com.cognyte.event_manager.backend.repository.EventRepository;
+import com.cognyte.event_manager.backend.service.dto.EventUpdateDTO;
+import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -27,12 +32,20 @@ public class EventService {
         return eventRepository.save(event);
     }
 
-    public Event update(Event event) {
-        return eventRepository.save(event);
+    public Optional<Event> update(Long id, EventUpdateDTO dto) {
+        return eventRepository.findById(id).map(existing -> {
+            existing.setTitle(dto.title());
+            existing.setPrice(new BigDecimal(dto.price()));
+            existing.setStartDate(dto.startDate());
+            existing.setEndDate(dto.endDate());
+            existing.setStatus(EventStatus.valueOf(dto.status()));
+            return eventRepository.save(existing);
+        });
     }
 
-    public List<Event> findAll(){
-        return eventRepository.findAll();
+
+    public Page<Event> findAll(Pageable pageable) {
+        return eventRepository.findAll(pageable);
     }
 
     public Optional<Event> findById(Long id){

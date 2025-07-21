@@ -1,21 +1,29 @@
 package com.cognyte.event_manager.backend.controller;
 
 import com.cognyte.event_manager.backend.domain.Event;
+import com.cognyte.event_manager.backend.errors.BadRequestAlertException;
 import com.cognyte.event_manager.backend.repository.EventRepository;
 import com.cognyte.event_manager.backend.service.EventService;
+import com.cognyte.event_manager.backend.service.dto.EventUpdateDTO;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/events")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class EventController {
+
+    private static final String ENTITY_NAME = "event";
 
     private final EventService eventService;
 
@@ -33,26 +41,36 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Event> updateEvent(@PathVariable(value = "id", required = false) final Long id, @RequestBody Event event) throws URISyntaxException, BadRequestException {
-        if (event.getId() == null) {
-            throw new BadRequestException("ID null");
+    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody EventUpdateDTO dto) throws BadRequestException{
+        if(dto.id() == null){
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "ID should not be null");
         }
 
-        if (!Objects.equals(id, event.getId())) {
-            throw new BadRequestException("Invalid ID");
+        if(!Objects.equals(id, dto.id())){
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "Provided ids doesn't match");
         }
 
-        if (!eventRepository.existsById(event.getId())) {
-            throw new BadRequestException("Entity not found");
-        }
-
-        return ResponseEntity.ok(eventService.update(event));
+        return eventService.update(id, dto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Event>> getAllEvents() {
-        return ResponseEntity.ok(eventService.findAll());
+    public ResponseEntity<Map<String, Object>> getAllEvents(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "8") int pageSize
+    ) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by("startDate").descending());
+        Page<Event> eventPage = eventService.findAll(pageRequest);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", eventPage.getContent());
+        response.put("total", eventPage.getTotalElements());
+        response.put("current", page);
+
+        return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Event> getEvent(@PathVariable(value = "id", required = false) final Long id) {
