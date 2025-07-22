@@ -4,6 +4,7 @@ import PageNotFound from "../../pages/error/page-not-found";
 import MainLayout from "../layout/layout";
 import Events from "../../pages/event/event";
 import EventUpdate from "../../pages/event/event-update";
+import EventCreate from "../../pages/event/event-create";
 
 const AppRoutes = () => {
   return (
@@ -18,6 +19,7 @@ const AppRoutes = () => {
           <Events />
         </MainLayout>
       } />
+      <Route path="/events/create" element={<EventCreate />} />
       <Route path="/events/:id/edit" element={<EventUpdate />} />
       <Route path="*" element={<PageNotFound />} />
       <Route path="/" element={<Navigate to="/home" replace />} />

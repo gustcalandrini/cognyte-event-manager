@@ -9,6 +9,7 @@ import {
   Tag,
   Pagination,
   Popconfirm,
+  Button,
 } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import {
@@ -22,6 +23,7 @@ import type { AppDispatch, RootState } from '../../services/config/redux/store';
 import { EventStatus } from '../../shared/types/enumerations/event-enum';
 import type { IEvent } from '../../shared/types/event-model';
 import { useNavigate } from 'react-router-dom';
+import CreateButton from '../../shared/components/CreateButton';
 
 const { Title, Text } = Typography;
 
@@ -69,12 +71,13 @@ const EventListPage: React.FC = () => {
     return <Spin fullscreen />;
   }
 
-  console.log('Events:', events);
-
   return (
     <div style={{ padding: '24px' }}>
-      <Title level={2}>Event List</Title>
 
+      <Title level={2}>Event List</Title>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+        <CreateButton to="/events/create" type="primary" entityName="Event" />
+      </div>
       <Row gutter={[16, 16]}>
         {events.map((event) => (
           <Col xs={24} sm={12} md={8} lg={6} key={event.id}>

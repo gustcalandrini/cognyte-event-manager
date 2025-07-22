@@ -2,7 +2,7 @@ import { EventStatus } from './enumerations/event-enum';
 import dayjs from 'dayjs';
 
 export interface IEvent {
-  id: number;
+  id?: number;
   title: string;
   startDate: dayjs.Dayjs;
   endDate: dayjs.Dayjs;
