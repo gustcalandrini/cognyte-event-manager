@@ -1,12 +1,9 @@
 package com.cognyte.event_manager.backend.controller;
 
 import com.cognyte.event_manager.backend.domain.Event;
-import com.cognyte.event_manager.backend.errors.BadRequestAlertException;
-import com.cognyte.event_manager.backend.repository.EventRepository;
 import com.cognyte.event_manager.backend.service.EventService;
 import com.cognyte.event_manager.backend.service.dto.EventUpdateDTO;
 import jakarta.validation.Valid;
-import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,22 +13,16 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/events")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class EventController {
 
-    private static final String ENTITY_NAME = "event";
-
     private final EventService eventService;
 
-    private final EventRepository eventRepository;
-
-    public EventController(EventService eventService, EventRepository eventRepository) {
+    public EventController(EventService eventService) {
         this.eventService = eventService;
-        this.eventRepository = eventRepository;
     }
 
     @PostMapping("")
@@ -41,16 +32,8 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody EventUpdateDTO dto) throws BadRequestException{
-        if(dto.id() == null){
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "ID should not be null");
-        }
-
-        if(!Objects.equals(id, dto.id())){
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "Provided ids doesn't match");
-        }
-
-        return eventService.update(id, dto)
+    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody EventUpdateDTO eventUpdateDTO) {
+        return eventService.update(id, eventUpdateDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

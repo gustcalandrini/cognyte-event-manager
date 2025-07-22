@@ -2,9 +2,9 @@ package com.cognyte.event_manager.backend.service;
 
 import com.cognyte.event_manager.backend.domain.Event;
 import com.cognyte.event_manager.backend.domain.enumeration.EventStatus;
+import com.cognyte.event_manager.backend.errors.BadRequestAlertException;
 import com.cognyte.event_manager.backend.repository.EventRepository;
 import com.cognyte.event_manager.backend.service.dto.EventUpdateDTO;
-import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,11 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @Transactional(rollbackFor = IOException.class)
 public class EventService {
+
+    private static final String ENTITY_NAME = "event";
 
     private final EventRepository eventRepository;
 
@@ -26,19 +29,32 @@ public class EventService {
 
     public Event save(Event event) {
         if(event.getEndDate().isBefore(event.getStartDate())) {
-            //ToDo: Create new kind of exception for this;
-            throw new IllegalArgumentException("End date shouldn't be greater than the start Date");
+            throw new BadRequestAlertException("Invalid Date", ENTITY_NAME, "End date must be after start date");
         }
+
         return eventRepository.save(event);
     }
 
-    public Optional<Event> update(Long id, EventUpdateDTO dto) {
+    public Optional<Event> update(Long id, EventUpdateDTO eventUpdateDTO) {
+
+        if(eventUpdateDTO.id() == null){
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "ID should not be null");
+        }
+
+        if(!Objects.equals(id, eventUpdateDTO.id())){
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "Provided ids doesn't match");
+        }
+
+        if(eventUpdateDTO.endDate().isBefore(eventUpdateDTO.startDate())) {
+            throw new BadRequestAlertException("Invalid Date", ENTITY_NAME, "End date must be after start date");
+        }
+
         return eventRepository.findById(id).map(existing -> {
-            existing.setTitle(dto.title());
-            existing.setPrice(new BigDecimal(dto.price()));
-            existing.setStartDate(dto.startDate());
-            existing.setEndDate(dto.endDate());
-            existing.setStatus(EventStatus.valueOf(dto.status()));
+            existing.setTitle(eventUpdateDTO.title());
+            existing.setPrice(new BigDecimal(eventUpdateDTO.price()));
+            existing.setStartDate(eventUpdateDTO.startDate());
+            existing.setEndDate(eventUpdateDTO.endDate());
+            existing.setStatus(EventStatus.valueOf(eventUpdateDTO.status()));
             return eventRepository.save(existing);
         });
     }
