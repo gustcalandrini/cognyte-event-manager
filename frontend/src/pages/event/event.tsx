@@ -88,7 +88,7 @@ const EventListPage: React.FC = () => {
                 <Popconfirm
                   key="delete"
                   title="Are you sure you want to delete this event?"
-                  onConfirm={() => handleDelete(event.id)}
+                  onConfirm={() => event.id !== undefined && handleDelete(event.id)}
                   okText="Yes"
                   cancelText="No"
                 >

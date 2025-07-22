@@ -1,5 +1,7 @@
-export enum EventStatus {
-    STARTED = 'STARTED',
-    COMPLETED = 'COMPLETED',
-    PAUSED = 'PAUSED'
-}
+export type EventStatus = 'STARTED' | 'COMPLETED' | 'PAUSED';
+
+export const EventStatus = {
+    STARTED: 'STARTED' as EventStatus,
+    COMPLETED: 'COMPLETED' as EventStatus,
+    PAUSED: 'PAUSED' as EventStatus
+};

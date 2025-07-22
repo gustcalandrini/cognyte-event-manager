@@ -150,7 +150,7 @@ const eventSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(updateEventThunk.fulfilled, (state, action) => {
+            .addCase(updateEventThunk.fulfilled, (state) => {
                 state.loading = false;
             })
             .addCase(updateEventThunk.rejected, (state, action) => {

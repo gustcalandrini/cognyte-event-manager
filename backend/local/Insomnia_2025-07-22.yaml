@@ -1,0 +1,142 @@
+type: collection.insomnia.rest/5.0
+name: Cognyte Event Manager Collection
+meta:
+  id: wrk_31a7593ed81c4a7d92a07a824a0aa8de
+  created: 1753045415321
+  modified: 1753150103254
+  description: ""
+collection:
+  - url: "{{ _._api_url }}/events"
+    name: Get all events
+    meta:
+      id: req_7e6813f9cda542b4b11a43110f32fe5f
+      created: 1753045415420
+      modified: 1753150190833
+      isPrivate: false
+      description: ""
+      sortKey: -1753045415420
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.3.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _._api_url }}/events"
+    name: Create event
+    meta:
+      id: req_2ecc96eb2dad49af8612c1fdec6e9f2c
+      created: 1753047470714
+      modified: 1753150302036
+      isPrivate: false
+      description: ""
+      sortKey: -1753047470714
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        		"title": "Evento Teste Create",
+        		"startDate": "2025-08-20T21:40:00Z",
+        		"endDate": "2025-09-21T21:40:00Z",
+        		"price": 999.00,
+        		"status": "STARTED"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.3.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _._api_url }}/events/10"
+    name: Get one event by ID
+    meta:
+      id: req_13287119536649a0a1169f9c6ab416d7
+      created: 1753048833382
+      modified: 1753150254789
+      isPrivate: false
+      description: ""
+      sortKey: -1753045415370
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.3.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _._api_url }}/events/27"
+    name: Update event
+    meta:
+      id: req_0374288210f7454aa7814f542d7ef8e5
+      created: 1753048863005
+      modified: 1753150282111
+      isPrivate: false
+      description: ""
+      sortKey: -1753046443067
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        		"id": "27",
+        		"title": "Evento Teste 27 Date Rule",
+        		"startDate": "2025-08-20T21:40:00Z",
+        		"endDate": "2025-09-21T21:40:00Z",
+        		"price": 10000.00,
+        		"status": "COMPLETED"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.3.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_f794bc60e752c27c832761a6a9a6e621994a09c2
+    created: 1753045415334
+    modified: 1753045483293
+  cookies:
+    - key: JSESSIONID
+      value: 0B89E8211AFF3E7D9CB2D2EEEDBB82ED
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-07-20T21:04:43.293Z
+      lastAccessed: 2025-07-20T21:04:43.293Z
+      id: 99a54ac7-9e89-489d-a5c9-a54ba65a9961
+environments:
+  name: Base Environment
+  meta:
+    id: env_f794bc60e752c27c832761a6a9a6e621994a09c2
+    created: 1753045415331
+    modified: 1753150138819
+    isPrivate: false
+  data:
+    _api_url: localhost:8080/api

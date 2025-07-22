@@ -1,0 +1,48 @@
+services:
+  postgresql:
+    image: postgres:16.2-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=event-manager-db
+    networks:
+      - backend-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: backend
+      dockerfile: /local/docker/Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - backend-network
+      - frontend-network
+    depends_on:
+      - postgresql
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: /docker/Dockerfile
+    ports:
+      - 4173:4173
+    environment:
+      - NODE_ENV=production
+    networks:
+      - frontend-network
+    env_file:
+      - frontend/.env
+
+networks:
+  frontend-network:
+    driver: bridge
+  backend-network:
+    internal: true

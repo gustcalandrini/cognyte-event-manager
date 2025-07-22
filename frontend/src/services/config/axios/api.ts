@@ -15,7 +15,7 @@ api.interceptors.response.use(
     const method = response.config.method?.toUpperCase();
     const successMsg = response.config.headers?.['X-Success-Message'];
 
-    if (successMsg && ['POST', 'PUT', 'DELETE'].includes(method)) {
+    if (successMsg && method && ['POST', 'PUT', 'DELETE'].includes(method)) {
       notification.success({
         message: 'Sucess!',
         description: successMsg,
