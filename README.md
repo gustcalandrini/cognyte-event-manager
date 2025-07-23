@@ -50,6 +50,7 @@ You can use Docker to quickly set up and run the application. Follow these steps
    - The backend will be available at [http://localhost:8080](http://localhost:8080).
    - The database will be running on port `5432`.
  - You can find the Insomnia Collection file for this project on the folder `backend/local/docker/Insomnia_2025-07-22.yaml` and import it to your Insomnia application to test the API.
+ - You can download Insomnia REST Client directly from it's web site: https://insomnia.rest/download
 
 ### Frontend
 
